@@ -38,7 +38,7 @@ export class TaskService {
 
   getCrons() {
     const jobs = this.schedulerRegistry.getCronJobs();
-    jobs.forEach((value, key, map) => {
+    jobs.forEach((value, key) => {
       let next;
       try {
         next = value.nextDates();
