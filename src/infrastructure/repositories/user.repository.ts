@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { UserRepository } from '../../domain/repositories/userRepository.interface';
 import { User } from '../entities/user.entity';
-import { UserModel } from 'src/domain/models/user.model';
+import { UserModel } from '../../domain/models/user.model';
 
 @Injectable()
 export class DatabaseUserRepository implements UserRepository {
@@ -22,7 +22,7 @@ export class DatabaseUserRepository implements UserRepository {
       { hach_refresh_token: refreshToken },
     );
   }
-  async getUserByUsername(username: string): Promise<UserModel> {
+  async getUserByUsername(username: string): Promise<UserModel|null> {
     const adminUserEntity = await this.userEntityRepository.findOne({
       where: {
         username: username,
@@ -32,6 +32,16 @@ export class DatabaseUserRepository implements UserRepository {
       return null;
     }
     return this.toUser(adminUserEntity);
+  }
+  async getUsersWithLastLoginBefore(date: Date): Promise<UserModel[]> {
+    const adminUserEntities = await this.userEntityRepository.find({
+      where: {
+        last_login: LessThan(date),
+      },
+    });
+    return adminUserEntities.map((adminUserEntity) =>
+      this.toUser(adminUserEntity),
+    );
   }
   async updateLastLogin(username: string): Promise<void> {
     await this.userEntityRepository.update(

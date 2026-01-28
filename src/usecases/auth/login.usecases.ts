@@ -1,8 +1,5 @@
-import {
-  IJwtService,
-  IJwtServicePayload,
-} from 'src/domain/adapters/jwt.interface';
 import { IBcryptService } from '../../domain/adapters/bcrypt.interface';
+import { IJwtService, IJwtServicePayload } from '../../domain/adapters/jwt.interface';
 import { JWTConfig } from '../../domain/config/jwt.interface';
 import { ILogger } from '../../domain/logger/logger.interface';
 import { UserRepository } from '../../domain/repositories/userRepository.interface';
@@ -23,7 +20,7 @@ export class LoginUseCases {
     );
     const payload: IJwtServicePayload = { username: username };
     const secret = this.jwtConfig.getJwtSecret();
-    const expiresIn = this.jwtConfig.getJwtExpirationTime() + 's';
+    const expiresIn = this.jwtConfig.getJwtExpirationTime();
     const token = this.jwtTokenService.createToken(payload, secret, expiresIn);
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()}`;
   }
@@ -35,7 +32,7 @@ export class LoginUseCases {
     );
     const payload: IJwtServicePayload = { username: username };
     const secret = this.jwtConfig.getJwtRefreshSecret();
-    const expiresIn = this.jwtConfig.getJwtRefreshExpirationTime() + 's';
+    const expiresIn = this.jwtConfig.getJwtRefreshExpirationTime();
     const token = this.jwtTokenService.createToken(payload, secret, expiresIn);
     await this.setCurrentRefreshToken(token, username);
     const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtRefreshExpirationTime()}`;

@@ -20,12 +20,12 @@ class EnvironmentVariables {
 
   @IsString()
   JWT_SECRET: string;
-  @IsString()
-  JWT_EXPIRATION_TIME: string;
+  @IsNumber()
+  JWT_EXPIRATION_TIME: number;
   @IsString()
   JWT_REFRESH_TOKEN_SECRET: string;
-  @IsString()
-  JWT_REFRESH_TOKEN_EXPIRATION_TIME: string;
+  @IsNumber()
+  JWT_REFRESH_TOKEN_EXPIRATION_TIME: number;
 
   @IsString()
   DATABASE_HOST: string;

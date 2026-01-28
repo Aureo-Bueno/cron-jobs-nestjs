@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EnvironmentConfigModule } from '../environment-config/environment-config.module';
 import { EnvironmentConfigService } from '../environment-config/environment-config.service';
+import { User } from '../../entities/user.entity';
+import { Todo } from '../../entities/todo.entity';
 
 export const getTypeOrmModuleOptions = (
   config: EnvironmentConfigService,
@@ -13,7 +15,7 @@ export const getTypeOrmModuleOptions = (
     username: config.getDatabaseUser(),
     password: config.getDatabasePassword(),
     database: config.getDatabaseName(),
-    entities: [__dirname + './../../**/*.entity{.ts,.js}'],
+    entities: [User, Todo],
     synchronize: false,
     schema: process.env.DATABASE_SCHEMA,
     migrationsRun: true,

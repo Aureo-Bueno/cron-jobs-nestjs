@@ -5,10 +5,10 @@ import { Request } from 'express';
 import { EnvironmentConfigService } from '../../config/environment-config/environment-config.service';
 import { LoggerService } from '../../logger/logger.service';
 import { ExceptionsService } from '../../exceptions/exceptions.service';
-import { UsecasesProxyModule } from 'src/infrastructure/services/usecases-proxy/usecases-proxy.module';
-import { TokenPayload } from 'src/domain/models/auth.model';
-import { UseCaseProxy } from 'src/infrastructure/services/usecases-proxy/usecases-proxy';
-import { LoginUseCases } from 'src/usecases/auth/login.usecases';
+import { UsecasesProxyModule } from '../../services/usecases-proxy/usecases-proxy.module';
+import { UseCaseProxy } from '../../services/usecases-proxy/usecases-proxy';
+import { LoginUseCases } from '../../../usecases/auth/login.usecases';
+import { TokenPayload } from '../../../domain/models/auth.model';
 
 @Injectable()
 export class JwtRefreshTokenStrategy extends PassportStrategy(

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TodoModel } from 'src/domain/models/todo.model';
-import { TodoRepository } from 'src/domain/repositories/todoRepository.interface';
-import { Todo } from 'src/infrastructure/entities/todo.entity';
 import { Repository } from 'typeorm';
+import { TodoRepository } from '../../domain/repositories/todoRepository.interface';
+import { Todo } from '../entities/todo.entity';
+import { TodoModel } from '../../domain/models/todo.model';
 
 @Injectable()
 export class DatabaseTodoRepository implements TodoRepository {
@@ -26,6 +26,12 @@ export class DatabaseTodoRepository implements TodoRepository {
   }
   async findAll(): Promise<TodoModel[]> {
     const todoEntity = await this.todoEntityRepository.find();
+    return todoEntity.map((todoEntity) => this.toTodo(todoEntity));
+  }
+  async findAllDone(): Promise<TodoModel[]> {
+    const todoEntity = await this.todoEntityRepository.find({
+      where: { isDone: true },
+    });
     return todoEntity.map((todoEntity) => this.toTodo(todoEntity));
   }
   async findById(id: number): Promise<TodoModel> {

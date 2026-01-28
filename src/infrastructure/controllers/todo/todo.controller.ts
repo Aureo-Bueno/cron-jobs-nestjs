@@ -10,16 +10,16 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiExtraModels } from '@nestjs/swagger';
-import { ApiResponseType } from 'src/infrastructure/common/swagger/response.decorator';
-import { UseCaseProxy } from 'src/infrastructure/services/usecases-proxy/usecases-proxy';
-import { UsecasesProxyModule } from 'src/infrastructure/services/usecases-proxy/usecases-proxy.module';
-import { addTodoUseCases } from 'src/usecases/todo/addTodo.usecases';
-import { deleteTodoUseCases } from 'src/usecases/todo/deleteTodo.usecases';
-import { GetTodoUseCases } from 'src/usecases/todo/getTodo.usecases';
-import { getTodosUseCases } from 'src/usecases/todo/getTodos.usecases';
-import { updateTodoUseCases } from 'src/usecases/todo/updateTodo.usecases';
 import { UpdateTodoDto, AddTodoDto } from './todo.dto';
 import { TodoPresenter } from './todo.presenter';
+import { addTodoUseCases } from '../../../usecases/todo/addTodo.usecases';
+import { deleteTodoUseCases } from '../../../usecases/todo/deleteTodo.usecases';
+import { GetTodoUseCases } from '../../../usecases/todo/getTodo.usecases';
+import { getTodosUseCases } from '../../../usecases/todo/getTodos.usecases';
+import { updateTodoUseCases } from '../../../usecases/todo/updateTodo.usecases';
+import { ApiResponseType } from '../../common/swagger/response.decorator';
+import { UseCaseProxy } from '../../services/usecases-proxy/usecases-proxy';
+import { UsecasesProxyModule } from '../../services/usecases-proxy/usecases-proxy.module';
 
 @Controller('todo')
 @ApiTags('todo')

@@ -1,4 +1,4 @@
-import { TodoModel } from 'src/domain/models/todo.model';
+import { TodoModel } from '../../domain/models/todo.model';
 import { TodoRepository } from '../../domain/repositories/todoRepository.interface';
 
 export class GetTodoUseCases {

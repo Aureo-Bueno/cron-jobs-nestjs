@@ -1,6 +1,6 @@
 export interface JWTConfig {
   getJwtSecret(): string;
-  getJwtExpirationTime(): string;
+  getJwtExpirationTime(): number;
   getJwtRefreshSecret(): string;
-  getJwtRefreshExpirationTime(): string;
+  getJwtRefreshExpirationTime(): number;
 }

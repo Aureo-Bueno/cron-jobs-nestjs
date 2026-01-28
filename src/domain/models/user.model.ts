@@ -3,7 +3,7 @@ export class UserWithoutPassword {
   username: string;
   createDate: Date;
   updatedDate: Date;
-  lastLogin: Date;
+  lastLogin?: Date;
   hashRefreshToken: string;
 }
 

@@ -16,17 +16,17 @@ import {
   ApiBody,
   ApiOperation,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwtAuth.guard';
-import JwtRefreshGuard from 'src/infrastructure/common/guards/jwtRefresh.guard';
-import { LoginGuard } from 'src/infrastructure/common/guards/login.guard';
-import { ApiResponseType } from 'src/infrastructure/common/swagger/response.decorator';
-import { UseCaseProxy } from 'src/infrastructure/services/usecases-proxy/usecases-proxy';
-import { UsecasesProxyModule } from 'src/infrastructure/services/usecases-proxy/usecases-proxy.module';
-import { IsAuthenticatedUseCases } from 'src/usecases/auth/isAuthencated.usecases';
-import { LoginUseCases } from 'src/usecases/auth/login.usecases';
-import { LogoutUseCases } from 'src/usecases/auth/logout.usecases';
 import { IsAuthPresenter } from './auth.presenter';
 import { AuthDto } from './auth.dto';
+import { IsAuthenticatedUseCases } from '../../../usecases/auth/isAuthencated.usecases';
+import { LoginUseCases } from '../../../usecases/auth/login.usecases';
+import { LogoutUseCases } from '../../../usecases/auth/logout.usecases';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
+import JwtRefreshGuard from '../../common/guards/jwtRefresh.guard';
+import { LoginGuard } from '../../common/guards/login.guard';
+import { ApiResponseType } from '../../common/swagger/response.decorator';
+import { UseCaseProxy } from '../../services/usecases-proxy/usecases-proxy';
+import { UsecasesProxyModule } from '../../services/usecases-proxy/usecases-proxy.module';
 
 @Controller('auth')
 @ApiTags('auth')

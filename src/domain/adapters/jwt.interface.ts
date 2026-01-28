@@ -7,6 +7,6 @@ export interface IJwtService {
   createToken(
     payload: IJwtServicePayload,
     secret: string,
-    expiresIn: string,
+    expiresIn: number,
   ): string;
 }

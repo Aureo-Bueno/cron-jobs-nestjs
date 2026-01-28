@@ -11,6 +11,7 @@ import { JwtStrategy } from './infrastructure/common/strategies/jwt.strategy';
 import { JwtRefreshTokenStrategy } from './infrastructure/common/strategies/jwtRefresh.strategy';
 import { UsecasesProxyModule } from './infrastructure/services/usecases-proxy/usecases-proxy.module';
 import { ControllersModule } from './infrastructure/controllers/controllers.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ControllersModule } from './infrastructure/controllers/controllers.modu
     BcryptModule,
     JwtServiceModule,
     EnvironmentConfigModule,
+    TaskModule,
   ],
   providers: [LocalStrategy, JwtStrategy, JwtRefreshTokenStrategy],
 })
