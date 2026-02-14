@@ -1,4 +1,4 @@
-export interface TokenPayload {
+export interface ITokenPayload {
   username: string;
   userId: string;
 }

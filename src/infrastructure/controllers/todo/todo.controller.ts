@@ -8,8 +8,14 @@ import {
   Body,
   Delete,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiResponse, ApiExtraModels } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiResponse,
+  ApiExtraModels,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { UpdateTodoDto, AddTodoDto } from './todo.dto';
 import { TodoPresenter } from './todo.presenter';
 import { addTodoUseCases } from '../../../usecases/todo/addTodo.usecases';
@@ -18,11 +24,18 @@ import { GetTodoUseCases } from '../../../usecases/todo/getTodo.usecases';
 import { getTodosUseCases } from '../../../usecases/todo/getTodos.usecases';
 import { updateTodoUseCases } from '../../../usecases/todo/updateTodo.usecases';
 import { ApiResponseType } from '../../common/swagger/response.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
 import { UseCaseProxy } from '../../services/usecases-proxy/usecases-proxy';
 import { UsecasesProxyModule } from '../../services/usecases-proxy/usecases-proxy.module';
 
 @Controller('todo')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 @ApiTags('todo')
+@ApiResponse({
+  status: 401,
+  description: 'No authorization token was found',
+})
 @ApiResponse({ status: 500, description: 'Internal error' })
 @ApiExtraModels(TodoPresenter)
 export class TodoController {

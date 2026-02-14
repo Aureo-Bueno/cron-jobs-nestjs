@@ -1,6 +1,6 @@
 import { UserModel } from '../models/user.model';
 
-export interface UserRepository {
+export interface IUserRepository {
   getUserByUsername(username: string): Promise<UserModel|null>;
   getUsersWithLastLoginBefore(date: Date): Promise<UserModel[]>;
   updateLastLogin(username: string): Promise<void>;

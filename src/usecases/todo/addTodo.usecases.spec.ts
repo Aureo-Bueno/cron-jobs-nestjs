@@ -1,6 +1,6 @@
 import { addTodoUseCases } from './addTodo.usecases';
 import { ILogger } from '../../domain/logger/logger.interface';
-import { TodoRepository } from '../../domain/repositories/todoRepository.interface';
+import { ITodoRepository } from '../../domain/repositories/todoRepository.interface';
 import { TodoModel } from '../../domain/models/todo.model';
 
 describe('addTodoUseCases', () => {
@@ -12,7 +12,7 @@ describe('addTodoUseCases', () => {
       error: jest.fn(),
       verbose: jest.fn(),
     };
-    const todoRepository: jest.Mocked<TodoRepository> = {
+    const todoRepository: jest.Mocked<ITodoRepository> = {
       insert: jest.fn(),
       findAll: jest.fn(),
       findAllDone: jest.fn(),

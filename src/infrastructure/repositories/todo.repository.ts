@@ -1,24 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { TodoRepository } from '../../domain/repositories/todoRepository.interface';
+import { ITodoRepository } from '../../domain/repositories/todoRepository.interface';
 import { Todo } from '../entities/todo.entity';
 import { TodoModel } from '../../domain/models/todo.model';
+import { ExceptionsService } from '../exceptions/exceptions.service';
 
 @Injectable()
-export class DatabaseTodoRepository implements TodoRepository {
+export class DatabaseTodoRepository implements ITodoRepository {
   constructor(
     @InjectRepository(Todo)
     private readonly todoEntityRepository: Repository<Todo>,
+    private readonly exceptionService: ExceptionsService,
   ) {}
 
   async updateContent(id: number, isDone: boolean): Promise<void> {
-    await this.todoEntityRepository.update(
+    const result = await this.todoEntityRepository.update(
       {
         id: String(id),
       },
       { isDone: isDone },
     );
+    if (!result.affected) {
+      this.exceptionService.notFoundException({
+        message: `Todo ${id} not found`,
+      });
+    }
   }
   async insert(todo: TodoModel): Promise<void> {
     const todoEntity = this.toTodoEntity(todo);
@@ -35,13 +42,23 @@ export class DatabaseTodoRepository implements TodoRepository {
     return todoEntity.map((todoEntity) => this.toTodo(todoEntity));
   }
   async findById(id: number): Promise<TodoModel> {
-    const todoEntity = await this.todoEntityRepository.findOneOrFail({
+    const todoEntity = await this.todoEntityRepository.findOne({
       where: { id: String(id) },
     });
+    if (!todoEntity) {
+      this.exceptionService.notFoundException({
+        message: `Todo ${id} not found`,
+      });
+    }
     return this.toTodo(todoEntity);
   }
   async deleteById(id: number): Promise<void> {
-    await this.todoEntityRepository.delete({ id: String(id) });
+    const result = await this.todoEntityRepository.delete({ id: String(id) });
+    if (!result.affected) {
+      this.exceptionService.notFoundException({
+        message: `Todo ${id} not found`,
+      });
+    }
   }
 
   private toTodo(todoEntity: Todo): TodoModel {

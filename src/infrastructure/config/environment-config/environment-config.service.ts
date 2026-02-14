@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseConfig } from '../../../domain/config/database.interface';
-import { JWTConfig } from '../../../domain/config/jwt.interface';
+import { IDatabaseConfig } from '../../../domain/config/database.interface';
+import { IJWTConfig } from '../../../domain/config/jwt.interface';
 
 @Injectable()
-export class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
+export class EnvironmentConfigService implements IDatabaseConfig, IJWTConfig {
   constructor(private configService: ConfigService) {}
 
   getJwtSecret(): string {

@@ -1,9 +1,9 @@
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { TaskService } from './task.service';
-import { DatabaseTodoRepository } from '../../infrastructure/repositories/todo.repository';
-import { DatabaseUserRepository } from '../../infrastructure/repositories/user.repository';
 import { TodoModel } from '../../domain/models/todo.model';
 import { UserModel } from '../../domain/models/user.model';
+import { ITodoRepository } from '../../domain/repositories/todoRepository.interface';
+import { IUserRepository } from '../../domain/repositories/userRepository.interface';
 
 jest.mock('cron', () => ({
   CronJob: jest.fn().mockImplementation((cronTime: string, onTick: () => void) => ({
@@ -19,12 +19,12 @@ const buildService = () => {
     addCronJob: jest.fn(),
     getCronJobs: jest.fn(),
   } as unknown as jest.Mocked<SchedulerRegistry>;
-  const todoRepository: jest.Mocked<DatabaseTodoRepository> = {
+  const todoRepository: jest.Mocked<ITodoRepository> = {
     findAllDone: jest.fn(),
-  } as unknown as jest.Mocked<DatabaseTodoRepository>;
-  const userRepository: jest.Mocked<DatabaseUserRepository> = {
+  } as unknown as jest.Mocked<ITodoRepository>;
+  const userRepository: jest.Mocked<IUserRepository> = {
     getUsersWithLastLoginBefore: jest.fn(),
-  } as unknown as jest.Mocked<DatabaseUserRepository>;
+  } as unknown as jest.Mocked<IUserRepository>;
 
   const service = new TaskService(
     schedulerRegistry,

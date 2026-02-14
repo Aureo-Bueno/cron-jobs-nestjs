@@ -1,6 +1,6 @@
 import { deleteTodoUseCases } from './deleteTodo.usecases';
 import { ILogger } from '../../domain/logger/logger.interface';
-import { TodoRepository } from '../../domain/repositories/todoRepository.interface';
+import { ITodoRepository } from '../../domain/repositories/todoRepository.interface';
 
 describe('deleteTodoUseCases', () => {
   it('deletes todo and logs action', async () => {
@@ -11,7 +11,7 @@ describe('deleteTodoUseCases', () => {
       error: jest.fn(),
       verbose: jest.fn(),
     };
-    const todoRepository: jest.Mocked<TodoRepository> = {
+    const todoRepository: jest.Mocked<ITodoRepository> = {
       insert: jest.fn(),
       findAll: jest.fn(),
       findAllDone: jest.fn(),

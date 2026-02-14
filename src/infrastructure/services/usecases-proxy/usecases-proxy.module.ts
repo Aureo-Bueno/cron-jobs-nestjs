@@ -14,12 +14,17 @@ import { updateTodoUseCases } from '../../../usecases/todo/updateTodo.usecases';
 import { EnvironmentConfigModule } from '../../config/environment-config/environment-config.module';
 import { EnvironmentConfigService } from '../../config/environment-config/environment-config.service';
 import { ExceptionsModule } from '../../exceptions/exceptions.module';
+import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { LoggerModule } from '../../logger/logger.module';
 import { LoggerService } from '../../logger/logger.service';
 import { RepositoriesModule } from '../../repositories/repositories.module';
-import { DatabaseTodoRepository } from '../../repositories/todo.repository';
-import { DatabaseUserRepository } from '../../repositories/user.repository';
 import { BcryptService } from '../bcrypt/bcrypt.service';
+import {
+  TODO_REPOSITORY,
+  USER_REPOSITORY,
+} from '../../../domain/repositories/repositories.tokens';
+import { ITodoRepository } from '../../../domain/repositories/todoRepository.interface';
+import { IUserRepository } from '../../../domain/repositories/userRepository.interface';
 
 @Module({
   imports: [
@@ -51,7 +56,7 @@ export class UsecasesProxyModule {
             LoggerService,
             JwtTokenService,
             EnvironmentConfigService,
-            DatabaseUserRepository,
+            USER_REPOSITORY,
             BcryptService,
           ],
           provide: UsecasesProxyModule.LOGIN_USECASES_PROXY,
@@ -59,7 +64,7 @@ export class UsecasesProxyModule {
             logger: LoggerService,
             jwtTokenService: JwtTokenService,
             config: EnvironmentConfigService,
-            userRepo: DatabaseUserRepository,
+            userRepo: IUserRepository,
             bcryptService: BcryptService,
           ) =>
             new UseCaseProxy(
@@ -73,10 +78,15 @@ export class UsecasesProxyModule {
             ),
         },
         {
-          inject: [DatabaseUserRepository],
+          inject: [USER_REPOSITORY, ExceptionsService],
           provide: UsecasesProxyModule.IS_AUTHENTICATED_USECASES_PROXY,
-          useFactory: (userRepo: DatabaseUserRepository) =>
-            new UseCaseProxy(new IsAuthenticatedUseCases(userRepo)),
+          useFactory: (
+            userRepo: IUserRepository,
+            exceptionsService: ExceptionsService,
+          ) =>
+            new UseCaseProxy(
+              new IsAuthenticatedUseCases(userRepo, exceptionsService),
+            ),
         },
         {
           inject: [],
@@ -84,39 +94,39 @@ export class UsecasesProxyModule {
           useFactory: () => new UseCaseProxy(new LogoutUseCases()),
         },
         {
-          inject: [DatabaseTodoRepository],
+          inject: [TODO_REPOSITORY],
           provide: UsecasesProxyModule.GET_TODO_USECASES_PROXY,
-          useFactory: (todoRepository: DatabaseTodoRepository) =>
+          useFactory: (todoRepository: ITodoRepository) =>
             new UseCaseProxy(new GetTodoUseCases(todoRepository)),
         },
         {
-          inject: [DatabaseTodoRepository],
+          inject: [TODO_REPOSITORY],
           provide: UsecasesProxyModule.GET_TODOS_USECASES_PROXY,
-          useFactory: (todoRepository: DatabaseTodoRepository) =>
+          useFactory: (todoRepository: ITodoRepository) =>
             new UseCaseProxy(new getTodosUseCases(todoRepository)),
         },
         {
-          inject: [LoggerService, DatabaseTodoRepository],
+          inject: [LoggerService, TODO_REPOSITORY],
           provide: UsecasesProxyModule.POST_TODO_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
-            todoRepository: DatabaseTodoRepository,
+            todoRepository: ITodoRepository,
           ) => new UseCaseProxy(new addTodoUseCases(logger, todoRepository)),
         },
         {
-          inject: [LoggerService, DatabaseTodoRepository],
+          inject: [LoggerService, TODO_REPOSITORY],
           provide: UsecasesProxyModule.PUT_TODO_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
-            todoRepository: DatabaseTodoRepository,
+            todoRepository: ITodoRepository,
           ) => new UseCaseProxy(new updateTodoUseCases(logger, todoRepository)),
         },
         {
-          inject: [LoggerService, DatabaseTodoRepository],
+          inject: [LoggerService, TODO_REPOSITORY],
           provide: UsecasesProxyModule.DELETE_TODO_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
-            todoRepository: DatabaseTodoRepository,
+            todoRepository: ITodoRepository,
           ) => new UseCaseProxy(new deleteTodoUseCases(logger, todoRepository)),
         },
       ],

@@ -8,7 +8,7 @@ import { ExceptionsService } from '../../exceptions/exceptions.service';
 import { UsecasesProxyModule } from '../../services/usecases-proxy/usecases-proxy.module';
 import { UseCaseProxy } from '../../services/usecases-proxy/usecases-proxy';
 import { LoginUseCases } from '../../../usecases/auth/login.usecases';
-import { TokenPayload } from '../../../domain/models/auth.model';
+import { ITokenPayload } from '../../../domain/models/auth.model';
 
 @Injectable()
 export class JwtRefreshTokenStrategy extends PassportStrategy(
@@ -33,7 +33,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(request: Request, payload: TokenPayload) {
+  async validate(request: Request, payload: ITokenPayload) {
     const refreshToken = request.cookies?.Refresh;
     const user = this.loginUsecaseProxy
       .getInstance()

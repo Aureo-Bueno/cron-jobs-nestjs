@@ -1,10 +1,10 @@
 import { getTodosUseCases } from './getTodos.usecases';
-import { TodoRepository } from '../../domain/repositories/todoRepository.interface';
+import { ITodoRepository } from '../../domain/repositories/todoRepository.interface';
 import { TodoModel } from '../../domain/models/todo.model';
 
 describe('getTodosUseCases', () => {
   it('returns all todos', async () => {
-    const todoRepository: jest.Mocked<TodoRepository> = {
+    const todoRepository: jest.Mocked<ITodoRepository> = {
       insert: jest.fn(),
       findAll: jest.fn(),
       findAllDone: jest.fn(),

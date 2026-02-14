@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import {
   Cron,
   CronExpression,
@@ -6,10 +6,14 @@ import {
   Timeout,
 } from '@nestjs/schedule';
 import { CronJob } from 'cron';
-import { DatabaseTodoRepository } from '../../infrastructure/repositories/todo.repository';
-import { DatabaseUserRepository } from '../../infrastructure/repositories/user.repository';
 import { TodoModel } from '../../domain/models/todo.model';
 import { UserModel } from '../../domain/models/user.model';
+import type { ITodoRepository } from '../../domain/repositories/todoRepository.interface';
+import type { IUserRepository } from '../../domain/repositories/userRepository.interface';
+import {
+  TODO_REPOSITORY,
+  USER_REPOSITORY,
+} from '../../domain/repositories/repositories.tokens';
 
 @Injectable()
 export class TaskService {
@@ -17,8 +21,10 @@ export class TaskService {
 
   constructor(
     private schedulerRegistry: SchedulerRegistry,
-    private readonly todoRepository: DatabaseTodoRepository,
-    private readonly userRepository: DatabaseUserRepository,
+    @Inject(TODO_REPOSITORY)
+    private readonly todoRepository: ITodoRepository,
+    @Inject(USER_REPOSITORY)
+    private readonly userRepository: IUserRepository,
   ) {}
 
   @Cron(CronExpression.EVERY_30_SECONDS)

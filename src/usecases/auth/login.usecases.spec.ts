@@ -1,9 +1,9 @@
 import { LoginUseCases } from './login.usecases';
 import { IBcryptService } from '../../domain/adapters/bcrypt.interface';
 import { IJwtService } from '../../domain/adapters/jwt.interface';
-import { JWTConfig } from '../../domain/config/jwt.interface';
+import { IJWTConfig } from '../../domain/config/jwt.interface';
 import { ILogger } from '../../domain/logger/logger.interface';
-import { UserRepository } from '../../domain/repositories/userRepository.interface';
+import { IUserRepository } from '../../domain/repositories/userRepository.interface';
 import { UserModel } from '../../domain/models/user.model';
 
 const buildUseCase = () => {
@@ -18,13 +18,13 @@ const buildUseCase = () => {
     checkToken: jest.fn(),
     createToken: jest.fn(),
   };
-  const jwtConfig: jest.Mocked<JWTConfig> = {
+  const jwtConfig: jest.Mocked<IJWTConfig> = {
     getJwtSecret: jest.fn(),
     getJwtExpirationTime: jest.fn(),
     getJwtRefreshSecret: jest.fn(),
     getJwtRefreshExpirationTime: jest.fn(),
   };
-  const userRepository: jest.Mocked<UserRepository> = {
+  const userRepository: jest.Mocked<IUserRepository> = {
     getUserByUsername: jest.fn(),
     getUsersWithLastLoginBefore: jest.fn(),
     updateLastLogin: jest.fn(),

@@ -1,6 +1,6 @@
 import { TodoModel } from '../models/todo.model';
 
-export interface TodoRepository {
+export interface ITodoRepository {
   insert(todo: TodoModel): Promise<void>;
   findAll(): Promise<TodoModel[]>;
   findAllDone(): Promise<TodoModel[]>;
