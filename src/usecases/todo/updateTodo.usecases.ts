@@ -7,7 +7,7 @@ export class updateTodoUseCases {
     private readonly todoRepository: ITodoRepository,
   ) {}
 
-  async execute(id: number, isDone: boolean): Promise<void> {
+  async execute(id: string, isDone: boolean): Promise<void> {
     await this.todoRepository.updateContent(id, isDone);
     this.logger.log(
       'updateTodoUseCases execute',

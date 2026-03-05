@@ -21,9 +21,9 @@ describe('updateTodoUseCases', () => {
     };
 
     const useCase = new updateTodoUseCases(logger, todoRepository);
-    await useCase.execute(1, true);
+    await useCase.execute('1', true);
 
-    expect(todoRepository.updateContent).toHaveBeenCalledWith(1, true);
+    expect(todoRepository.updateContent).toHaveBeenCalledWith('1', true);
     expect(logger.log).toHaveBeenCalledWith(
       'updateTodoUseCases execute',
       'Todo 1 have been updated',

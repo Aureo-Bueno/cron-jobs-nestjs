@@ -4,9 +4,13 @@ export interface IFormatExceptionMessage {
 }
 
 export interface IException {
-  badRequestException(data: IFormatExceptionMessage): never;
+  badRequestException(data?: IFormatExceptionMessage): never;
   internalServerErrorException(data?: IFormatExceptionMessage): never;
   forbiddenException(data?: IFormatExceptionMessage): never;
-  UnauthorizedException(data?: IFormatExceptionMessage): never;
+  unauthorizedException(data?: IFormatExceptionMessage): never;
   notFoundException(data?: IFormatExceptionMessage): never;
+  conflictException(data?: IFormatExceptionMessage): never;
+  unprocessableEntityException(data?: IFormatExceptionMessage): never;
+  tooManyRequestsException(data?: IFormatExceptionMessage): never;
+  serviceUnavailableException(data?: IFormatExceptionMessage): never;
 }

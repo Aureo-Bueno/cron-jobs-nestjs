@@ -11,6 +11,10 @@ export class DatabaseUserRepository implements IUserRepository {
     @InjectRepository(User)
     private readonly userEntityRepository: Repository<User>,
   ) {}
+  async insertUser(user: UserModel): Promise<void> {
+    const userEntity = this.toUserEntity(user);
+    await this.userEntityRepository.insert(userEntity);
+  }
   async updateRefreshToken(
     username: string,
     refreshToken: string,

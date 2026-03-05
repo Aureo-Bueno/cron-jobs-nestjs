@@ -8,21 +8,35 @@ import { UserModel } from '../../domain/models/user.model';
 
 describe('IsAuthenticatedUseCases', () => {
   const buildExceptionsService = (): jest.Mocked<IException> => ({
-    badRequestException: jest.fn<never, [IFormatExceptionMessage]>(),
+    badRequestException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
     internalServerErrorException: jest.fn<
       never,
       [IFormatExceptionMessage | undefined]
     >(),
     forbiddenException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
-    UnauthorizedException: jest.fn<
+    unauthorizedException: jest.fn<
       never,
       [IFormatExceptionMessage | undefined]
     >(),
     notFoundException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
+    conflictException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
+    unprocessableEntityException: jest.fn<
+      never,
+      [IFormatExceptionMessage | undefined]
+    >(),
+    tooManyRequestsException: jest.fn<
+      never,
+      [IFormatExceptionMessage | undefined]
+    >(),
+    serviceUnavailableException: jest.fn<
+      never,
+      [IFormatExceptionMessage | undefined]
+    >(),
   });
 
   it('returns user info for authenticated user', async () => {
     const userRepository: jest.Mocked<IUserRepository> = {
+      insertUser: jest.fn(),
       getUserByUsername: jest.fn(),
       getUsersWithLastLoginBefore: jest.fn(),
       updateLastLogin: jest.fn(),
@@ -52,6 +66,7 @@ describe('IsAuthenticatedUseCases', () => {
 
   it('throws unauthorized when user is missing', async () => {
     const userRepository: jest.Mocked<IUserRepository> = {
+      insertUser: jest.fn(),
       getUserByUsername: jest.fn(),
       getUsersWithLastLoginBefore: jest.fn(),
       updateLastLogin: jest.fn(),
@@ -59,7 +74,7 @@ describe('IsAuthenticatedUseCases', () => {
     };
     const exceptionsService = buildExceptionsService();
     userRepository.getUserByUsername.mockResolvedValue(null);
-    exceptionsService.UnauthorizedException.mockImplementation(() => {
+    exceptionsService.unauthorizedException.mockImplementation(() => {
       throw new Error('Unauthorized');
     });
 
@@ -69,7 +84,7 @@ describe('IsAuthenticatedUseCases', () => {
     );
 
     await expect(useCase.execute('missing')).rejects.toThrow('Unauthorized');
-    expect(exceptionsService.UnauthorizedException).toHaveBeenCalledWith({
+    expect(exceptionsService.unauthorizedException).toHaveBeenCalledWith({
       message: 'User not found',
     });
   });

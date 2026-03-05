@@ -13,6 +13,12 @@ export class LoginUseCases {
     private readonly bcryptService: IBcryptService,
   ) {}
 
+  private buildCookieOptions(maxAge: number): string {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const secure = isProduction ? '; Secure' : '';
+    return `HttpOnly; Path=/; SameSite=Lax; Max-Age=${maxAge}${secure}`;
+  }
+
   async getCookieWithJwtToken(username: string) {
     this.logger.log(
       'LoginUseCases execute',
@@ -22,7 +28,7 @@ export class LoginUseCases {
     const secret = this.jwtConfig.getJwtSecret();
     const expiresIn = this.jwtConfig.getJwtExpirationTime();
     const token = this.jwtTokenService.createToken(payload, secret, expiresIn);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()}`;
+    return `Authentication=${token}; ${this.buildCookieOptions(expiresIn)}`;
   }
 
   async getCookieWithJwtRefreshToken(username: string) {
@@ -35,7 +41,7 @@ export class LoginUseCases {
     const expiresIn = this.jwtConfig.getJwtRefreshExpirationTime();
     const token = this.jwtTokenService.createToken(payload, secret, expiresIn);
     await this.setCurrentRefreshToken(token, username);
-    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtRefreshExpirationTime()}`;
+    const cookie = `Refresh=${token}; ${this.buildCookieOptions(expiresIn)}`;
     return cookie;
   }
 

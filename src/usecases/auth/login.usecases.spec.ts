@@ -25,6 +25,7 @@ const buildUseCase = () => {
     getJwtRefreshExpirationTime: jest.fn(),
   };
   const userRepository: jest.Mocked<IUserRepository> = {
+    insertUser: jest.fn(),
     getUserByUsername: jest.fn(),
     getUsersWithLastLoginBefore: jest.fn(),
     updateLastLogin: jest.fn(),
@@ -64,6 +65,12 @@ const buildUser = (): UserModel => ({
 });
 
 describe('LoginUseCases', () => {
+  const originalNodeEnv = process.env.NODE_ENV;
+
+  afterEach(() => {
+    process.env.NODE_ENV = originalNodeEnv;
+  });
+
   it('creates auth cookie with JWT token', async () => {
     const { useCase, logger, jwtTokenService, jwtConfig } = buildUseCase();
     jwtConfig.getJwtSecret.mockReturnValue('secret');
@@ -81,7 +88,9 @@ describe('LoginUseCases', () => {
       'secret',
       3600,
     );
-    expect(result).toBe('Authentication=token; HttpOnly; Path=/; Max-Age=3600');
+    expect(result).toBe(
+      'Authentication=token; HttpOnly; Path=/; SameSite=Lax; Max-Age=3600',
+    );
   });
 
   it('creates refresh cookie and stores hashed refresh token', async () => {
@@ -104,7 +113,23 @@ describe('LoginUseCases', () => {
       'bob',
       'hashed-refresh',
     );
-    expect(result).toBe('Refresh=refresh-token; HttpOnly; Path=/; Max-Age=7200');
+    expect(result).toBe(
+      'Refresh=refresh-token; HttpOnly; Path=/; SameSite=Lax; Max-Age=7200',
+    );
+  });
+
+  it('adds Secure flag to cookies in production', async () => {
+    const { useCase, jwtTokenService, jwtConfig } = buildUseCase();
+    process.env.NODE_ENV = 'production';
+    jwtConfig.getJwtSecret.mockReturnValue('secret');
+    jwtConfig.getJwtExpirationTime.mockReturnValue(3600);
+    jwtTokenService.createToken.mockReturnValue('token');
+
+    const result = await useCase.getCookieWithJwtToken('alice');
+
+    expect(result).toBe(
+      'Authentication=token; HttpOnly; Path=/; SameSite=Lax; Max-Age=3600; Secure',
+    );
   });
 
   it('returns null for local strategy when user is missing', async () => {

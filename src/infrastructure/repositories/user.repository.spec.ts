@@ -5,6 +5,7 @@ import { UserModel } from '../../domain/models/user.model';
 
 const buildRepository = () => {
   const userEntityRepository: jest.Mocked<Repository<User>> = {
+    insert: jest.fn(),
     update: jest.fn(),
     findOne: jest.fn(),
     find: jest.fn(),
@@ -15,6 +16,27 @@ const buildRepository = () => {
 };
 
 describe('DatabaseUserRepository', () => {
+  it('inserts a mapped user entity', async () => {
+    const { repository, userEntityRepository } = buildRepository();
+    const user: UserModel = {
+      id: 1,
+      username: 'new',
+      password: 'hashed',
+      createDate: new Date('2024-01-01T00:00:00.000Z'),
+      updatedDate: new Date('2024-01-02T00:00:00.000Z'),
+      lastLogin: undefined,
+      hashRefreshToken: 'refresh',
+    };
+
+    await repository.insertUser(user);
+
+    expect(userEntityRepository.insert).toHaveBeenCalledWith({
+      username: 'new',
+      password: 'hashed',
+      last_login: undefined,
+    });
+  });
+
   it('updates refresh token by username', async () => {
     const { repository, userEntityRepository } = buildRepository();
 

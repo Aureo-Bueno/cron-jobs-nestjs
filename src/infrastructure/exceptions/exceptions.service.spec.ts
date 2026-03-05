@@ -1,8 +1,12 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
+  HttpException,
   InternalServerErrorException,
   NotFoundException,
+  ServiceUnavailableException,
+  UnprocessableEntityException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -43,7 +47,7 @@ describe('ExceptionsService', () => {
 
   it('throws UnauthorizedException', () => {
     expect(() =>
-      service.UnauthorizedException({ message: 'unauthorized' }),
+      service.unauthorizedException({ message: 'unauthorized' }),
     ).toThrow(UnauthorizedException);
   });
 
@@ -51,5 +55,42 @@ describe('ExceptionsService', () => {
     expect(() =>
       service.notFoundException({ message: 'not found' }),
     ).toThrow(NotFoundException);
+  });
+
+  it('throws ConflictException', () => {
+    expect(() =>
+      service.conflictException({ message: 'conflict' }),
+    ).toThrow(ConflictException);
+  });
+
+  it('throws UnprocessableEntityException', () => {
+    expect(() =>
+      service.unprocessableEntityException({ message: 'unprocessable' }),
+    ).toThrow(UnprocessableEntityException);
+  });
+
+  it('throws TooManyRequestsException', () => {
+    expect(() =>
+      service.tooManyRequestsException({ message: 'too many requests' }),
+    ).toThrow(HttpException);
+  });
+
+  it('throws TooManyRequestsException with default message', () => {
+    try {
+      service.tooManyRequestsException();
+    } catch (error) {
+      const exception = error as HttpException;
+      expect(exception).toBeInstanceOf(HttpException);
+      expect(exception.getStatus()).toBe(429);
+      expect(exception.getResponse()).toEqual({
+        message: 'Too many requests',
+      });
+    }
+  });
+
+  it('throws ServiceUnavailableException', () => {
+    expect(() =>
+      service.serviceUnavailableException({ message: 'service unavailable' }),
+    ).toThrow(ServiceUnavailableException);
   });
 });

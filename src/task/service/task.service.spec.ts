@@ -107,6 +107,18 @@ describe('TaskService', () => {
     );
   });
 
+  it('logs cron errors when non-error is thrown', async () => {
+    const { service, logger } = buildService();
+    jest.spyOn(service, 'listDoneTodos').mockRejectedValue('boom');
+
+    await service.handleCron();
+
+    expect(logger.error).toHaveBeenCalledWith(
+      'Failed to fetch cron data',
+      'boom',
+    );
+  });
+
   it('logs timeout execution', () => {
     const { service, logger } = buildService();
 
@@ -135,6 +147,24 @@ describe('TaskService', () => {
     expect(jobInstance.start).toHaveBeenCalled();
     expect(logger.warn).toHaveBeenCalledWith(
       'job job-name added for each minute at 5 seconds!',
+    );
+  });
+
+  it('logs warning when dynamic cron callback is triggered', async () => {
+    const { service, logger } = buildService();
+    const { CronJob } = jest.requireMock('cron') as {
+      CronJob: jest.Mock;
+    };
+
+    await service.addCronJob('job-name', '5');
+
+    const jobInstance = CronJob.mock.results[0].value as {
+      onTick: () => void;
+    };
+    jobInstance.onTick();
+
+    expect(logger.warn).toHaveBeenCalledWith(
+      'time (5) for job job-name to run!',
     );
   });
 

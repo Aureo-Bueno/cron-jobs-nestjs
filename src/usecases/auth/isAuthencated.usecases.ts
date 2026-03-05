@@ -13,7 +13,7 @@ export class IsAuthenticatedUseCases {
       username,
     );
     if (!user) {
-      this.exceptionService.UnauthorizedException({
+      this.exceptionService.unauthorizedException({
         message: 'User not found',
       });
     }

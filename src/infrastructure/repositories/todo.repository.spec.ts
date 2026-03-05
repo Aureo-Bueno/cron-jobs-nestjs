@@ -8,14 +8,30 @@ import { Todo } from '../entities/todo.entity';
 import { TodoModel } from '../../domain/models/todo.model';
 
 const buildExceptionsService = (): jest.Mocked<IException> => ({
-  badRequestException: jest.fn<never, [IFormatExceptionMessage]>(),
+  badRequestException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
   internalServerErrorException: jest.fn<
     never,
     [IFormatExceptionMessage | undefined]
   >(),
   forbiddenException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
-  UnauthorizedException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
+  unauthorizedException: jest.fn<
+    never,
+    [IFormatExceptionMessage | undefined]
+  >(),
   notFoundException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
+  conflictException: jest.fn<never, [IFormatExceptionMessage | undefined]>(),
+  unprocessableEntityException: jest.fn<
+    never,
+    [IFormatExceptionMessage | undefined]
+  >(),
+  tooManyRequestsException: jest.fn<
+    never,
+    [IFormatExceptionMessage | undefined]
+  >(),
+  serviceUnavailableException: jest.fn<
+    never,
+    [IFormatExceptionMessage | undefined]
+  >(),
 });
 
 const buildRepository = () => {
@@ -82,7 +98,7 @@ describe('DatabaseTodoRepository', () => {
       throw new Error('not found');
     });
 
-    await expect(repository.updateContent(3, true)).rejects.toThrow('not found');
+    await expect(repository.updateContent('3', true)).rejects.toThrow('not found');
     expect(exceptionsService.notFoundException).toHaveBeenCalledWith({
       message: 'Todo 3 not found',
     });
@@ -107,7 +123,7 @@ describe('DatabaseTodoRepository', () => {
       buildRepository();
     todoEntityRepository.update.mockResolvedValue({ affected: 1 } as any);
 
-    await repository.updateContent(2, true);
+    await repository.updateContent('2', true);
 
     expect(exceptionsService.notFoundException).not.toHaveBeenCalled();
   });

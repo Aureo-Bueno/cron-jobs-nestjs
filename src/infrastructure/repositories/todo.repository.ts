@@ -14,10 +14,10 @@ export class DatabaseTodoRepository implements ITodoRepository {
     private readonly exceptionService: ExceptionsService,
   ) {}
 
-  async updateContent(id: number, isDone: boolean): Promise<void> {
+  async updateContent(id: string, isDone: boolean): Promise<void> {
     const result = await this.todoEntityRepository.update(
       {
-        id: String(id),
+        id: id,
       },
       { isDone: isDone },
     );

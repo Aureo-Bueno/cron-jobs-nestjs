@@ -10,15 +10,15 @@ import { map } from 'rxjs/operators';
 
 export class ResponseFormat<T> {
   @ApiProperty()
-  isArray: boolean;
+  isArray!: boolean;
   @ApiProperty()
-  path: string;
+  path!: string;
   @ApiProperty()
-  duration: string;
+  duration!: string;
   @ApiProperty()
-  method: string;
+  method!: string;
 
-  data: T;
+  data!: T;
 }
 
 @Injectable()
